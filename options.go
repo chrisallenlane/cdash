@@ -5,7 +5,6 @@ import (
 )
 
 type Options struct {
-	//Command    string
 	ConfigFile string
 }
 
