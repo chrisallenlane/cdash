@@ -1,5 +1,5 @@
-cdash ("coin dash")
-===================
+cdash ("coin dashboard")
+========================
 A minimalist cryptocurrency portfolio dashboard for the command-line that draws
 market data from the [Coin Market Cap][cmc] API.
 
@@ -37,6 +37,11 @@ you choose to store it elsewhere, provide `cdash` the approriate path using the
 ```sh
 cdash --config=/path/to/cdash.yml
 ```
+
+Windows Usage
+-------------
+`cdash` uses ANSI escape sequences for colorization. Windows users must take
+note to use a compatible shell.
 
 
 [Releases]: https://github.com/chrisallenlane/cdash/releases/
