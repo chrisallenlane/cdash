@@ -22,6 +22,7 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	log.SetFlags(0) // disable timestamps
 
 	// query the coinmarketcap API
 	response, err := http.Get("https://api.coinmarketcap.com/v1/ticker/")
@@ -55,7 +56,7 @@ func main() {
 
 		// throw an error if no CoinMarketCap data exists for `coin`
 		if _, exists := hash[coin.Symbol]; exists == false {
-			log.Fatalln(errors.New("No data available for token '" + coin.Symbol + "'."))
+			log.Fatalln(errors.New("No data available for token \"" + coin.Symbol + "\"."))
 		}
 
 		// merge coin data
