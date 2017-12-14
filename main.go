@@ -14,7 +14,7 @@ import (
 
 func main() {
 	// initialize options
-	docopts, _ := docopt.Parse(usage(), nil, true, "1.0.0", false)
+	docopts, _ := docopt.Parse(usage(), nil, true, "1.0.1", false)
 	options := NewOptions(docopts)
 
 	// initialize configs
