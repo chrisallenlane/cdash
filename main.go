@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/docopt/docopt-go"
 	"github.com/olekukonko/tablewriter"
 	"io/ioutil"
@@ -51,6 +52,12 @@ func main() {
 	// assemble the coin portfolio
 	portfolio := []Coin{}
 	for _, coin := range config {
+
+		// throw an error if no CoinMarketCap data exists for `coin`
+		if _, exists := hash[coin.Symbol]; exists == false {
+			log.Fatalln(errors.New("No data available for token '" + coin.Symbol + "'."))
+		}
+
 		// merge coin data
 		c := hash[coin.Symbol]
 		c.Holdings = coin.Holdings
