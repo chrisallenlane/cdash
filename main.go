@@ -14,7 +14,7 @@ import (
 
 func main() {
 	// initialize options
-	docopts, _ := docopt.Parse(usage(), nil, true, "1.0.1", false)
+	docopts, _ := docopt.Parse(usage(), nil, true, "1.1.0", false)
 	options := NewOptions(docopts)
 
 	// initialize configs
@@ -25,7 +25,7 @@ func main() {
 	log.SetFlags(0) // disable timestamps
 
 	// query the coinmarketcap API
-	response, err := http.Get("https://api.coinmarketcap.com/v1/ticker/")
+	response, err := http.Get("https://api.coinmarketcap.com/v1/ticker/?limit=0")
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -53,7 +53,6 @@ func main() {
 	// assemble the coin portfolio
 	portfolio := []Coin{}
 	for _, coin := range config {
-
 		// throw an error if no CoinMarketCap data exists for `coin`
 		if _, exists := hash[coin.Symbol]; exists == false {
 			log.Fatalln(errors.New("No data available for token \"" + coin.Symbol + "\"."))
