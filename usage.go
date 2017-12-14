@@ -2,10 +2,10 @@ package main
 
 func usage() string {
 
-	return `cdash ("coin dash")
+	return `cdash
 
 A minimalist cryptocurrency portfolio dashboard for the command-line that draws
-market data from the Coin Market Cap API.
+market data from the CoinMarketCap API.
 
 Usage:
   cdash [options] 

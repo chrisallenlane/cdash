@@ -1,7 +1,7 @@
 cdash ("coin dashboard")
 ========================
 A minimalist cryptocurrency portfolio dashboard for the command-line that draws
-market data from the [Coin Market Cap][cmc] API.
+market data from the [CoinMarketCap][cmc] API.
 
 ![screenshot][img]
 
