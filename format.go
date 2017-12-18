@@ -20,7 +20,6 @@ func format(what string, value float64, colorize bool) string {
 	case "":
 		formatted = separate(value, 8, ",", ".")
 	case "$":
-		//formatted = money.Format(value)
 		formatted = "$" + separate(value, 2, ",", ".")
 	}
 
