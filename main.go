@@ -5,10 +5,10 @@ import (
 	"errors"
 	"github.com/docopt/docopt-go"
 	"github.com/olekukonko/tablewriter"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"fmt"
 )
 
 func main() {
@@ -30,16 +30,13 @@ func main() {
 	}
 	defer response.Body.Close()
 
-	// read the response body
-	body, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		log.Fatalln(err)
+	if response.StatusCode != http.StatusOK {
+		log.Fatalln(fmt.Sprintf("status code is not 200 (%d)", response.StatusCode))
 	}
 
-	// unpack the JSON response
-	coins := []Coin{}
-	err = json.Unmarshal([]byte(body), &coins)
-	if err != nil {
+	// read the response body and unpack the JSON response
+	coins := make([]Coin, 0)
+	if err := json.NewDecoder(response.Body).Decode(&coins); err != nil {
 		log.Fatalln(err)
 	}
 
