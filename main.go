@@ -9,12 +9,11 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 )
 
 func main() {
 	// initialize options
-	docopts, _ := docopt.Parse(usage(), nil, true, "1.1.0", false)
+	docopts, _ := docopt.Parse(usage(), nil, true, "1.1.1", false)
 	options := NewOptions(docopts)
 
 	// initialize configs
@@ -75,12 +74,12 @@ func main() {
 		total += worth
 		row := []string{
 			coin.Symbol,
-			format(coin.PriceUSD, "", false),
-			format(coin.Delta1H, "%", true),
-			format(coin.Delta1D, "%", true),
-			format(coin.Delta7D, "%", true),
-			format(coin.Holdings, "", true),
-			format(worth, "", false),
+			format("$", coin.PriceUSD, false),
+			format("%", coin.Delta1H, true),
+			format("%", coin.Delta1D, true),
+			format("%", coin.Delta7D, true),
+			format("", coin.Holdings, false),
+			format("$", worth, false),
 		}
 		rows = append(rows, row)
 	}
@@ -108,7 +107,18 @@ func main() {
 		"",
 		"",
 		"Portfolio Value",
-		"$" + strconv.FormatFloat(total, 'f', 2, 64),
+		format("$", total, false),
+	})
+
+	// set column alignment
+	table.SetColumnAlignment([]int{
+		tablewriter.ALIGN_LEFT,
+		tablewriter.ALIGN_RIGHT,
+		tablewriter.ALIGN_RIGHT,
+		tablewriter.ALIGN_RIGHT,
+		tablewriter.ALIGN_RIGHT,
+		tablewriter.ALIGN_RIGHT,
+		tablewriter.ALIGN_RIGHT,
 	})
 
 	// write to stdout
