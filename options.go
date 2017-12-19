@@ -4,22 +4,22 @@ import (
 	"os"
 )
 
-type Options struct {
+type options struct {
 	ConfigFile string
 }
 
-func NewOptions(docopts map[string]interface{}) Options {
+func newOptions(docopts map[string]interface{}) options {
 
-	// initialize an Options object
-	options := Options{}
+	// initialize an options object
+	opts := options{}
 
 	// ConfigFile
 	if docopts["--config"] != nil {
-		options.ConfigFile = docopts["--config"].(string)
+		opts.ConfigFile = docopts["--config"].(string)
 	} else {
-		options.ConfigFile = os.Getenv("HOME") + "/.config/cdash.yml"
+		opts.ConfigFile = os.Getenv("HOME") + "/.config/cdash.yml"
 	}
 
-	// return the options object
-	return options
+	// return the opts object
+	return opts
 }

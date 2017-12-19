@@ -6,16 +6,16 @@ import (
 )
 
 // method that returns config struct
-func NewConfig(options Options) ([]Coin, error) {
+func newConfig(opts options) ([]coin, error) {
 
 	// read the config file
-	buf, err := ioutil.ReadFile(options.ConfigFile)
+	buf, err := ioutil.ReadFile(opts.ConfigFile)
 	if err != nil {
 		return nil, err
 	}
 
 	//initialize a config object
-	config := make([]Coin, 1)
+	config := make([]coin, 1)
 
 	// unmarshal the yaml
 	err = yaml.Unmarshal(buf, &config)

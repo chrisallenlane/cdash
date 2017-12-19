@@ -13,11 +13,11 @@ import (
 
 func main() {
 	// initialize options
-	docopts, _ := docopt.Parse(usage(), nil, true, "1.1.2", false)
-	options := NewOptions(docopts)
+	docopts, _ := docopt.Parse(usage(), nil, true, "1.1.3", false)
+	options := newOptions(docopts)
 
 	// initialize configs
-	config, err := NewConfig(options)
+	config, err := newConfig(options)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -38,19 +38,19 @@ func main() {
 	}
 
 	// read the response body and unpack the JSON response
-	coins := make([]Coin, 0)
+	var coins []coin
 	if err := json.NewDecoder(response.Body).Decode(&coins); err != nil {
 		log.Fatalln(err)
 	}
 
 	// restructure coin data into a map
-	hash := map[string]Coin{}
+	hash := map[string]coin{}
 	for _, coin := range coins {
 		hash[coin.Symbol] = coin
 	}
 
 	// assemble the coin portfolio
-	portfolio := []Coin{}
+	portfolio := []coin{}
 	for _, coin := range config {
 		// throw an error if no CoinMarketCap data exists for `coin`
 		if _, exists := hash[coin.Symbol]; exists == false {
@@ -67,7 +67,7 @@ func main() {
 	}
 
 	// aggregate table data
-	var total float64 = 0
+	var total float64
 	rows := make([][]string, 1)
 	for _, coin := range portfolio {
 		worth := coin.Holdings * coin.PriceUSD

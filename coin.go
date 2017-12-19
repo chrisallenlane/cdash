@@ -1,7 +1,7 @@
 package main
 
-type Coin struct {
-	Id       string  `json:"id"`
+type coin struct {
+	ID       string  `json:"id"`
 	Name     string  `json:"name"`
 	Symbol   string  `json:"symbol"`
 	PriceUSD float64 `json:"price_usd,string"`
