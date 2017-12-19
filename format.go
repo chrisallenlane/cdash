@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/chrisallenlane/thou"
 	"github.com/mattn/go-isatty"
 	"github.com/mgutz/ansi"
 	"os"
@@ -16,11 +17,13 @@ func format(what string, value float64, colorize bool) string {
 	formatted := ""
 	switch what {
 	case "%":
-		formatted = separate(value, 2, ",", ".") + "%"
+		formatted, _ = thou.SepF(value, 2, ",", ".")
+		formatted += "%"
 	case "":
-		formatted = separate(value, 8, ",", ".")
+		formatted, _ = thou.SepF(value, 8, ",", ".")
 	case "$":
-		formatted = "$" + separate(value, 2, ",", ".")
+		formatted, _ = thou.SepF(value, 2, ",", ".")
+		formatted = "$" + formatted
 	}
 
 	// return early if no colorization is to be performed

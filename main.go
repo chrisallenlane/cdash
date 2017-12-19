@@ -3,9 +3,9 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/docopt/docopt-go"
 	"github.com/olekukonko/tablewriter"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -13,7 +13,7 @@ import (
 
 func main() {
 	// initialize options
-	docopts, _ := docopt.Parse(usage(), nil, true, "1.1.1", false)
+	docopts, _ := docopt.Parse(usage(), nil, true, "1.1.2", false)
 	options := NewOptions(docopts)
 
 	// initialize configs
@@ -30,16 +30,16 @@ func main() {
 	}
 	defer response.Body.Close()
 
-	// read the response body
-	body, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		log.Fatalln(err)
+	if response.StatusCode != http.StatusOK {
+		log.Fatalln(fmt.Sprintf(
+			"CoinMarketCap API responded with HTTP status %d.",
+			response.StatusCode,
+		))
 	}
 
-	// unpack the JSON response
-	coins := []Coin{}
-	err = json.Unmarshal([]byte(body), &coins)
-	if err != nil {
+	// read the response body and unpack the JSON response
+	coins := make([]Coin, 0)
+	if err := json.NewDecoder(response.Body).Decode(&coins); err != nil {
 		log.Fatalln(err)
 	}
 
