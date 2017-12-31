@@ -19,7 +19,7 @@ func main() {
 	log.SetFlags(0)
 
 	// initialize options
-	docopts, _ := docopt.Parse(usage(), nil, true, "1.2.0", false)
+	docopts, _ := docopt.Parse(usage(), nil, true, "1.2.1", false)
 	options, err := newOptions(docopts)
 	if err != nil {
 		log.Fatalln(err)
