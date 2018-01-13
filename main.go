@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -72,7 +71,7 @@ func main() {
 	for _, coin := range config {
 		// throw an error if no CoinMarketCap data exists for `coin`
 		if _, exists := hash[coin.Symbol]; exists == false {
-			log.Fatalln(errors.New("No data available for token \"" + coin.Symbol + "\"."))
+			log.Fatalln(fmt.Errorf("No data available for \"%s\".", coin.Symbol))
 		}
 
 		// merge coin data
