@@ -59,25 +59,61 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	// iterate over the raw JSON elements and create a map of symbols to coins
-	hash := map[string]coin{}
+	// iterate over the raw JSON elements and create lookups by Symbol and ID
+	bySym := map[string][]coin{}
+	byID := map[string]coin{}
 	for _, item := range raw {
 		coin := newCoin(item, options.Base)
-		hash[coin.Symbol] = coin
+		bySym[coin.Symbol] = append(bySym[coin.Symbol], coin)
+		byID[coin.ID] = coin
 	}
 
 	// assemble the coin portfolio
 	portfolio := []coin{}
-	for _, coin := range config {
-		// throw an error if no CoinMarketCap data exists for `coin`
-		if _, exists := hash[coin.Symbol]; exists == false {
-			log.Fatalln(fmt.Errorf("No data available for \"%s\".", coin.Symbol))
+	for _, cn := range config {
+
+		var c coin
+
+		// look up by symbol
+		//
+		// NB: coin symbols are NOT unique. (See issue #4). As such, test to see if
+		// the user has specified an ambiguous symbol in the configs. If an
+		// ambiguous symbol is found, prompt the user to specify an ID instead.
+		if e, exists := bySym[cn.Symbol]; exists {
+
+			// if elements share a common symbol
+			if len(bySym[cn.Symbol]) != 1 {
+
+				// assemble an error message
+				ids := ""
+				for _, cx := range e {
+					ids += fmt.Sprintf("\"%s\",", cx.ID)
+				}
+				ids = strings.Trim(ids, ",")
+
+				// display it, and terminate
+				log.Fatalln(fmt.Errorf(
+					"Symbol \"%s\" is ambiguous. Please specify an ID instead. (One of: %s)",
+					cn.Symbol,
+					ids,
+				))
+			}
+
+			// otherwise, take the first element if the symbol is unique
+			c = e[0]
+
+			// look up by ID
+		} else if e, exists := byID[cn.ID]; exists {
+			c = e
+
+			// throw an error if no CoinMarketCap data exists for `cn`
+		} else {
+			log.Fatalln(fmt.Errorf("No data available for \"%s\".", cn.Symbol))
 		}
 
 		// merge coin data
-		c := hash[coin.Symbol]
-		c.Holdings = coin.Holdings
-		c.Worth = coin.Holdings
+		c.Holdings = cn.Holdings
+		c.Worth = cn.Holdings
 
 		// add coin to portfolio
 		portfolio = append(portfolio, c)
