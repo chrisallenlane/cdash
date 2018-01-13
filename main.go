@@ -53,7 +53,7 @@ func main() {
 		))
 	}
 
-	// read and unpack the resposne body into a "raw" JSON object
+	// read and unpack the response body into a "raw" JSON object
 	var raw []map[string]string
 	if err := json.NewDecoder(response.Body).Decode(&raw); err != nil {
 		log.Fatalln(err)
