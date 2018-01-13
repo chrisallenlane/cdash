@@ -38,6 +38,33 @@ you choose to store it elsewhere, provide `cdash` the approriate path using the
 cdash --config=/path/to/cdash.yml
 ```
 
+### Ambiguous currency symbols ###
+Some cryptocurrency symbols are not unique, which can [cause problems due to
+ambiguity][issue-4]. To resolve this, `cdash` also allows currencies to be
+specified by CoinMarketCap `id`:
+
+```yml
+---
+- symbol   : BTC
+  holdings : 100
+
+- symbol   : LTC
+  holdings : 100
+
+- symbol   : ETH
+  holdings : 100
+
+- id       : bitcoin-gold # symbol "BTG"
+  holdings : 100
+
+- id       : bitgem       # also symbol "BTG"
+  holdings : 100
+```
+
+`cdash` will fail with an error if your config file contains references to
+ambiguous symbols.
+
+
 ### Specifying the base currency ###
 The [base currency][base] may be specified using the `--base` flag. The
 following currency codes are supported:
@@ -90,3 +117,4 @@ note to use a compatible shell.
 [base]:     https://en.wikipedia.org/wiki/Currency_pair#Base_currency
 [cmc]:      https://coinmarketcap.com/
 [img]:      ./.github/screen.jpg
+[issue-4]:  https://github.com/chrisallenlane/cdash/issues/4
