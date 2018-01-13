@@ -100,8 +100,14 @@ func main() {
 		fHoldings, _ := thou.SepF(coin.Holdings, 8, ",", ".")
 		fWorth, _ := thou.SepF(worth, 2, ",", ".")
 
+		// handle --name
+		token := coin.Symbol
+		if options.Name == true {
+			token = coin.Symbol + " - " + coin.Name
+		}
+
 		row := []string{
-			coin.Symbol,
+			token,
 			options.Symbol + fPrice,
 			colorize(fD1h+"%", coin.Delta1H),
 			colorize(fD1d+"%", coin.Delta1D),

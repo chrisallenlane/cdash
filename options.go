@@ -9,6 +9,7 @@ type options struct {
 	ConfigFile string
 	Base       string
 	Symbol     string
+	Name       bool
 }
 
 func newOptions(docopts map[string]interface{}) (options, error) {
@@ -35,6 +36,7 @@ func newOptions(docopts map[string]interface{}) (options, error) {
 		ConfigFile: configFile,
 		Base:       base,
 		Symbol:     symbol,
+		Name:       docopts["--name"].(bool),
 	}
 
 	// return the opts object
