@@ -5,22 +5,27 @@ import (
 	"io/ioutil"
 )
 
+type CdashConfig struct {
+	Coins []coin
+	Key string
+}
+
 // method that returns config struct
-func newConfig(opts options) ([]coin, error) {
+func newConfig(opts options) (CdashConfig, error) {
 
 	// read the config file
 	buf, err := ioutil.ReadFile(opts.ConfigFile)
 	if err != nil {
-		return nil, err
+		return CdashConfig{}, err
 	}
 
 	//initialize a config object
-	config := make([]coin, 1)
+	var config CdashConfig
 
 	// unmarshal the yaml
 	err = yaml.Unmarshal(buf, &config)
 	if err != nil {
-		return nil, err
+		return CdashConfig{}, err
 	}
 
 	// return the configs

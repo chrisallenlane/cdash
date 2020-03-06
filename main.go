@@ -13,6 +13,43 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
+type CoinMarketStatus struct {
+	timestamp string
+	error_code int
+	error_message string
+	elapsed int
+	credit_count int
+	notice string
+}
+
+type CoinMarketQuote struct {
+	Price float64
+	Volume_24h float64
+	Percent_change_1h float64
+	Percent_change_24h float64
+	Percent_change_7d float64
+	Market_cap float64
+	Last_updated string
+}
+
+type CoinMarketCoin struct {
+	ID int
+	Name string
+	Symbol string
+	Slug string
+	Date_added string
+	Max_supply float64
+	Circulating_supply float64
+	Total_supply float64
+	Last_updated string
+	Quote map[string]CoinMarketQuote
+}
+
+type CoinMarketRes struct {
+	Status CoinMarketStatus `json:"status"`
+	Data []CoinMarketCoin `json:"data"`
+}
+
 func main() {
 	// disable logger timestamps
 	log.SetFlags(0)
@@ -32,14 +69,24 @@ func main() {
 
 	// assemble the API URL
 	url := strings.Join([]string{
-		"https://api.coinmarketcap.com/v1/ticker/",
+		"https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest",
 		"?convert=",
 		options.Base,
-		"&limit=0",
+		"&start=1",
+		"&limit=5000",
 	}, "")
 
+	client := &http.Client{}
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	req.Header.Set("X-CMC_PRO_API_KEY", config.Key )
+
 	// query the coinmarketcap API
-	response, err := http.Get(url)
+	response, err := client.Do(req)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -54,7 +101,7 @@ func main() {
 	}
 
 	// read and unpack the response body into a "raw" JSON object
-	var raw []map[string]string
+	var raw CoinMarketRes
 	if err := json.NewDecoder(response.Body).Decode(&raw); err != nil {
 		log.Fatalln(err)
 	}
@@ -62,15 +109,15 @@ func main() {
 	// iterate over the raw JSON elements and create lookups by Symbol and ID
 	bySym := map[string][]coin{}
 	byID := map[string]coin{}
-	for _, item := range raw {
-		coin := newCoin(item, options.Base)
+	for _, cmc := range raw.Data {
+		coin := newCoin(cmc, options.Base)
 		bySym[coin.Symbol] = append(bySym[coin.Symbol], coin)
 		byID[coin.ID] = coin
 	}
 
 	// assemble the coin portfolio
 	portfolio := []coin{}
-	for _, cn := range config {
+	for _, cn := range config.Coins {
 
 		var c coin
 
