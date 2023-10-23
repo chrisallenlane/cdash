@@ -1,0 +1,12 @@
+coins:
+  - symbol   : BTC
+    holdings : 10000
+
+  - symbol   : BSV
+    holdings : 10
+
+  - symbol   : BCH
+    holdings : 10000
+
+
+key: aaaaabbb-bbbbb-ccccc-ddddd-eeeeeeeeee

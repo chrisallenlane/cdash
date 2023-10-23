@@ -10,6 +10,7 @@ type options struct {
 	Base       string
 	Symbol     string
 	Name       bool
+	APIKey     string
 }
 
 func newOptions(docopts map[string]interface{}) (options, error) {

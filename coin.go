@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"strconv"
-	"strings"
 )
 
 type coin struct {
@@ -19,36 +18,26 @@ type coin struct {
 }
 
 // constructs a coin from raw JSON
-func newCoin(json map[string]string, base string) coin {
+func newCoin(cmc CoinMarketCoin, base string) coin {
 	var d1h float64
 	var d1d float64
 	var d7d float64
 
-	if val, ok := json["percent_change_1h"]; ok {
-		d1h, _ = strconv.ParseFloat(val, 10)
-	}
 
-	if val, ok := json["percent_change_24h"]; ok {
-		d1d, _ = strconv.ParseFloat(val, 10)
-	}
-
-	if val, ok := json["percent_change_7d"]; ok {
-		d7d, _ = strconv.ParseFloat(val, 10)
-	}
+	d1h = cmc.Quote[base].Percent_change_1h
+	d1d = cmc.Quote[base].Percent_change_24h
+	d7d = cmc.Quote[base].Percent_change_7d
 
 	// parse out the price in the specified currency
-	b := strings.ToLower(base)
-	price, _ := strconv.ParseFloat(json["price_"+b], 10)
-
 	// initialize and return the coin
 	return coin{
-		ID:      json["id"],
-		Name:    json["name"],
-		Symbol:  json["symbol"],
+		ID:      strconv.Itoa(cmc.ID),
+		Name:    cmc.Name,
+		Symbol:  cmc.Symbol,
 		Delta1H: d1h,
 		Delta1D: d1d,
 		Delta7D: d7d,
-		Price:   price,
+		Price:   cmc.Quote[base].Price,
 	}
 }
 
